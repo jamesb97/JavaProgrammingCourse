@@ -45,10 +45,7 @@ public class BookMenu {
                 float tmpPrice = Float.parseFloat(scanner.nextLine()); // Convert the price from String to float
 
                 // Create a new Book object and store it in the books array at the current index
-                Book bkTmp = new Book();
-                bkTmp.setTitle(tmpTitle);
-                bkTmp.setAuthor(tmpAuthor);
-                bkTmp.setPrice(tmpPrice);
+                Book bkTmp = new Book(tmpTitle, tmpAuthor, tmpPrice);
                 books[bkIdx++] = bkTmp;
             }
             // Option 3: Compare prices of two books

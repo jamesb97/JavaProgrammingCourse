@@ -1,7 +1,11 @@
-public class Book {
+public class Book implements Cloneable {
     private String title;
     private String author;
     private float price;
+
+    public Book(String tmpTitle, String tmpAuthor, float tmpPrice) {
+        //TODO Auto-generated constructor stub
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -30,5 +34,10 @@ public class Book {
     public String toString() {
         return "Title - " + this.title + "\nAuthor - "
                 + this.author + "\nPrice - " + String.format("%.2f", this.price);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

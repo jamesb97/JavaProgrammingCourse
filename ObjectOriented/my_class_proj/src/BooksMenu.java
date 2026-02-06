@@ -26,10 +26,7 @@ public class BooksMenu {
                 String tmpAuthor = scanner.nextLine();
                 System.out.println("Enter book price");
                 float tmpPrice = Float.parseFloat(scanner.nextLine());
-                Book bkTmp = new Book();
-                bkTmp.setTitle(tmpTitle);
-                bkTmp.setAuthor(tmpAuthor);
-                bkTmp.setPrice(tmpPrice);
+                Book bkTmp = new Book(tmpTitle, tmpAuthor, tmpPrice);
                 books[bkIdx++] = bkTmp;
 
             } else {
