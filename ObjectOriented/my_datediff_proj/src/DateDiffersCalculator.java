@@ -1,0 +1,56 @@
+package ObjectOriented.my_datediff_proj.src;
+
+// Import necessary classes
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+import java.time.format.DateTimeParseException;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+
+public class DateDiffersCalculator {
+
+    public static void main(String s[]) {
+        // Create a scanner for user input
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt the user for the date format
+        System.out.println("Enter the format in which you want to feed the dates in");
+        String dateFormatStr = scanner.nextLine();
+
+        // Create a DateTimeFormatter with the specified format
+        DateTimeFormatter dateformat = DateTimeFormatter.ofPattern(dateFormatStr);
+
+        try {
+            // Prompt the user for the first date
+            System.out.println("Input the date in " + dateFormatStr + " format");
+            String rawDate1 = scanner.nextLine();
+
+            // Parse the first date
+            ZonedDateTime givenDate1 = ZonedDateTime.parse(rawDate1, dateformat);
+
+            // Prompt the user for the second date
+            System.out.println("Input the another date in " + dateFormatStr + " format");
+            String rawDate2 = scanner.nextLine();
+
+            // Parse the second date
+            ZonedDateTime givenDate2 = ZonedDateTime.parse(rawDate2, dateformat);
+
+            // Print the parsed dates
+            System.out.println("\nThe given date is " + givenDate1.format(dateformat));
+            System.out.println("\nThe other given date is " + givenDate2.format(dateformat));
+
+            // Check if the dates are equal
+            if (givenDate1.isEqual(givenDate2)) {
+                System.out.println("Both dates are the same");
+            } else {
+                System.out.println("The diff is " +
+                        ChronoUnit.DAYS.between(givenDate1, givenDate2) + " day(s)");
+            }
+        } catch (DateTimeParseException dte) {
+            // Handle invalid date input
+            System.out.println("Invalid input. Please try again!");
+        }
+        scanner.close(); // Close the scanner to prevent resource leaks
+    }
+}
