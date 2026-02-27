@@ -407,3 +407,126 @@ footer {
 17. Set the values in index.html of the class attribute of the `div` inside the nav tag to `topdiv`. Set the value of the class attribute of the buttons inside the nav bar to `topmenu`. Set the value of the class attribute of the section with id `weight` to `b weight`. Set the value of the class attribute of the section with id `distance` to `b distance`. Set the value of the class attribute of the div with id `go-home` to `iconbutton`.
 
 18. Save the index.html file and view it with Live Server.
+
+#### Add JavaScript interactivity
+
+1. Create a new file called `script.js`.
+
+2. Add the function to convert the temperature from Celsius to Fahrenheit
+
+- It should fetch the value inside the "celsius" element in the index.html
+- The mathematical formula for conversion should be applied
+
+`Temp(Fahrenheit) = [Temp(Degrees)*9/5] + 32`
+
+- Set the value property of the "farenheit" element in index.html to the returned value
+
+```
+function temperature(){
+    //To convert celsius to farenheit
+    //(CEL * 9/5) + 32
+    var c = document.getElementById("celsius").value;
+    var f = (c * 9/5) + 32
+    document.getElementById("fahrenheit").value = f
+}
+```
+
+3. Add the function to convert weight from Kgs to Pounds
+
+- It should fetch the value inside the "kilo" element in the index.html
+- The mathematical formula for conversion should be applied
+
+`Weight(Pounds) = Weight(Kgs) * 2.2`
+
+- Set the innerHTML property of the "pounds" element in the index.html to the returned value
+
+4. Add the function to convert distance from Kms to Miles
+
+- It should fetch the value inside the "km" element in the index.html
+- The mathematical formula for conversion should be applied
+
+`Distance(Miles) = Distance(Kms) * 0.62137`
+
+- Set the innerHTML property of the "miles" element in the index.html to the returned value.
+
+5. Save the updated script.js
+
+6. Link the styles.css to index.html
+
+- Use the `script` tag with the `src` attribute.
+
+```
+  <head>
+      <title>Document</title>
+      <link rel="stylesheet" href="style.css">
+      <script src="script.js"></script>
+  </head>
+```
+
+7. Link the `temperature` section of index.html to the temperature function in the script.js
+
+- To the button with ID `temperature` in index.html, add an onclick event to invoke the `temperature()` method.
+- Assign the ID value of temperature input to be 'celsius'
+- Assign the ID value of temperature output to be 'fahrenheit'
+
+```
+<fieldset>
+	<legend>Temperature</legend>
+	<label for="celsius">Celsius</label> <br/>
+
+	<input type="number" id="celsius"> <br/>
+
+	<button id="temperature" onclick="temperature()"> Convert </button> <br/>
+
+	<input type="number" id="fahrenheit"> <br/>
+
+	<label for="fahrenheit">Fahrenheit</label>
+</fieldset>
+
+```
+
+8. Link the `weight` section of index.html to the weight function in script.js
+
+- To the button with ID `weight` in index.html, add an onclick event to invoke the `weight()` method.
+- Assign the ID value of weight input to be 'kilo'
+- Assign the ID value of weight output to be 'pounds'
+
+```
+<fieldset>
+	<legend>Weight</legend>
+	<label for="Weight">KG</label> <br/>
+
+	<input type="number" id="kilo"> <br/>
+
+	<button id="weight" onclick="weight()"> Convert </button>  <br/>
+
+	<input type="number" id="pounds">  <br/>
+
+	<label for="pounds">Pounds</label>
+</fieldset>
+```
+
+9. Link the `distance` section of index.html to the distance function in script.js
+
+- To the button with ID `distance` in index.html, add an onclick event to invoke the `distance()` method.
+- Assign the ID value of distance input to be 'km'
+- Assign the ID value of distance output to be 'miles'
+
+```
+<fieldset>
+	<legend>Distance</legend>
+	<label for="km">KM</label> <br/>
+
+	<input type="number" id="km">  <br/>
+
+	<button id="distance" onclick="distance()"> Convert </button> <br/>
+
+	<input type="number" id="miles">  <br/>
+
+	<label for="miles">Miles</label>
+</fieldset>
+```
+
+10. Save the updated code in index.html
+
+11. View the index.html file with LiveServer and compare if the converted temperature, weight and distance are updated upon clicking on the respective buttons.
