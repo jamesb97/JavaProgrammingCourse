@@ -1,0 +1,13 @@
+[{
+  item: "Laptop",
+  price: 800,
+  quantity: 2
+}, {
+  item: "Monitor",
+  price: 150,
+  quantity: 1
+}, {
+  item: "Mouse",
+  price: 25,
+  quantity: 4
+}]
