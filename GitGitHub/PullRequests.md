@@ -1,206 +1,130 @@
-# Fork and Pull Requests
+# Part 1 - GitHub UI
 
-## Learning Objectives
+## Scenario
 
-1. Use git commands to manage upstream repositories
-2. Create a personal access token
-3. Fork existing repository using the UI
-4. Clone forked repository in the lab environment
-5. Create a new branch
-6. Make changes locally
-7. Add and commit to the local branch
-8. Push changes to the forked repository
-9. Create a pull request to the upstream repository
+You recently got hired as a developer in a micro-finance startup with a mission to empower and provide opportunities for low income individuals. The core team currently uses Subversion (SVN) for managing code. They want to slowly move their code to Git. You are asked to host their sample code to calculate simple interest on GitHub in a new repository as the first step in this journey. You will not only host the script, but also follow best practices introduced in this course and create supporting documents for the open source project including a code of conduct, and contribution guidelines. Additionally, the repository should be available to the community under the Apache License 2.0.
 
-### Exercise 1: Generate personal access token
+## Objectives
 
-The first step is to generate an access token from GitHub.com.
+After completing this lab, you would have demonstrated that you can:
 
-### Exercise 2: Fork the repository
+1. Create a new repository in your GitHub account.
+2. Select the appropriate license for your project.
+3. Create a README.md file that explains the purpose of the project.
+4. Create a Code of Conduct markdown that explains how you want the community to behave and interact with each other.
+5. Create a Contribution Guidelines markdown that tells the community how to contribute.
+6. Commit the new files to the repository.
 
-To fork a source repository:
+Note:
 
-1. Login to GitHub and go into the project's sample source repository. This is the upstream repository for the project.
-2. At the top right of the screen, click on Fork and select your GitHub account as the destination for the fork.
+1. As mentioned in the Final Project Overview Criteria, you can submit your project deliverables through either Option 1: AI-Graded Submission and Evaluation or Option 2: Peer-Graded Submission and Evaluation.
 
-### Exercise 3: Clone the forked repository
+2. For Option 1: AI-Graded Submission and Evaluation:
+   Submission requires the URLs for Task 1 to 5.
 
-A clone is a local copy of a repository.
+3. For Option 2: Peer-Graded Submission and Evaluation:
+   Submission requires the URLs for Task 1 to 6.
 
-1. In your list of repositories, click on the forked repository. On the repository's main page, click on the Code button.
-2. Click on the clipboard icon to copy the URL. Make sure the HTTPs tab is active.
-3. Open the terminal in the lab environment by using the menu in the editor. Terminal > New Terminal
-4. Let's export the copied URL in an environment variable so that is is available for us in later steps, run the following command in the terminal:
-   `export ORIGIN=<your repository HTTPS URL>
-`
-   Replace the url with the link copied from exercise 2.
-5. Run the following command with the HTTPs URL copied earlier:
-   `git clone $ORIGIN`
-   This command clones the repository that is on GitHub in the current directory.
+### Task 1: Create a GitHub repository and update the README.md file
 
-### Exercise 4: Explore the cloned repo
+1. Go to GitHub and create a new GitHub repository called github-final-project and make sure that it is public. The repository name must be exactly the same as given.
 
-To become familiar with the cloned repo, complete the following steps:
+2. Select the Add a README file checkbox and under Add license, choose Apache License 2.0 from the dropdown list.
 
-1. Click on the Explorer icon in the left panel.
-2. Click on the Project and expand the folder of the project that was cloned. Open the files in the editor, on the right side, by clicking on the file name.
+3. Click Create repository. This will create your repository with the README and LICENSE files. You can now update these files to include relevant project details for your community.
 
-### Exercise 5: Create the `feature-circle-500` branch
-
-Increase the size of the circle's size to 500x500 pixels. Before, we make the change, we will create a new branch.
-
-1. Navigate to the repository using the command `cd gkpbt-css-circle`
-2. Create a new branch using the `git checkout -b feature-circle-500` command. Notice that we used a single command instead of creating a branch and then checking it out. The `-b` flag creates the branch if it does not already exist.
-3. We can check that we are in the new branch by using the `git branch` command.
-
-### Exercise 6: Make the required code changes
-
-1. Let's change the width and height to 500px each. Open the `style.css` file from the file explorer and change the code as follows:
+4. Add the following information to the README.md file:
 
 ```
-.blue {
-            background-color:blue
-}
-.circle{
-            border-radius:50%;
-            width:500px;
-            height:500px;
-}
+# This is the README.md file for the **github-final-project**
+A calculator that calculates simple interest given principal, annual rate of interest and time period in years.
+Input:
+   p, principal amount
+   t, time period in years
+   r, annual rate of interest
+Output
+   simple interest = p*t*r
 ```
 
-2. If you do a git status at this point, you will see a change is shown. This change is not staged at this point, but Git is aware of it.
+For Option 1: AI-Graded Submission and Evaluation:
 
-`git status`
+- Copy and save the public GitHub repository URL of README.md in a text file, which contains the details about a simple interest calculator.
 
-3. Optionally, you can use the git diff command to see the detailed changes:
-   `git diff ./style.css`
+For Option 2: Peer-Graded Submission and Evaluation:
 
-Notice the text in red was deleted and the text in green was added. Essentially, we changed the height and width from 300px to 500px each.
+- Save the URL of the repository named github-final-project and the URL of the README.md file in a text file to submit later.
 
-Note: To exit the git diff command, simply press the "Q" key.
+## Task 2: Add a license file
 
-### Exercise 7: Add and commit your changes
+1. As part of Task 1, you picked a licence when creating the repository.
+2. Open the LICENSE file and check that its content are pointing to Apache License 2.0.
 
-A commit is Git's way of recording file changes, similar to how you might save an edited document. To commit the change that you made in the previous exercise, you first need to add it to a staging area.
-Git will then take the staged snapshot of changes and commit them to the project. Remember, Git will never change files unless you explicitly ask it to.
-To commit the new file, complete the following steps:
+- For Option 1: AI-Graded Submission and Evaluation and For Option 2: Peer-Graded Submission and Evaluation
 
-1. To move the changes from the working project directory to the staging area, type the following command in the Terminal window:
+- Copy and save the public GitHub repository URL of Apache License 2.0 in a text file to submit later.
 
-`git add .`
+### Task 3: Add a code of conduct
 
-The git add command has several options. The single . adds all untracked files in the current directory and subdirectories to the staging area. Alternatively, you can add the single file you created by using the git add style.css command. Finally, you can use git add -A to recursively add all files from the top level git folder.
+A code of conduct helps set the ground rules for the behavior of your project's participants. It defines standards for how to engage in a community.
 
-2. If you check the status at this point, you will see the file has changed from Untracked to Changes to be committed:
-3. To commit the new file to the local repository, you need to first tell git who you are. Type in the following commands to set your email and username. The email should be the same as your GitHub email.
-   Set your email:
+GitHub provides templates for common codes of conduct to help you quickly add one to your project. To add a code of conduct to your project, complete the following steps:
 
-`git config --global user.email "email@example.com"`
+1. Add a new file named CODE_OF_CONDUCT.md to the root folder of the repository with the "Contributor Covenant" template.
 
-Set your name:
+2. Go to your repositories homepage and check if the file has been created.
 
-`git config --global user.name "Your Name"`
+For Option 1: AI-Graded Submission and Evaluation and For Option 2: Peer-Graded Submission and Evaluation
 
-4. Type the following command in the Terminal window to commit the file. Note: It's always good practice to add a description for the commit so you can remember what the change was if you have to refer to it later.
-   `-m flag:` It is used in Git commit commands to specify the commit message directly in the command line, allowing you to provide a brief description of the changes you are committing.
+- Copy and save the public GitHub repository URL of CODE_OF_CONDUCT.md in a text file to submit later.
 
-`git commit -m "Changing the height and the width of the circle"`
+### Task 4: Add contribution guidelines
 
-As you can see, `git status` now says there is nothing to commit and the working tree is clean. The new file is now ready to be pushed from your local system to origin on GitHub.
+The contribution guidelines tell project participants how to contribute to the project. To add contributions guidelines, complete the following steps:
 
-### Exercise 8: Merge your branch back into the main branch
-
-If you are happy with your changes in the `feature-circle-500` branch, you can now merge it back into your local `main` branch by following these steps:
-
-1. Confirm that you are currently in the `feature-circle-500` branch.
-2. Check out the `main` branch.
-   `git checkout main`
-
-If you run `git branch` again, you should see `*` against the `main` branch.
-
-3. Merge the `feature-circle-500` branch into `main`.
-   `git merge feature-circle-500`
-
-4. Confirm the change was merged by using the `git log` command. We are using `--oneline` flag to display logs more concisely.
-
-Note: To exit the `git log` command, simply press the "Q" key. This action will close the log view and bring you back to the command prompt.
-
-### Exercise 9: Delete the `feature-circle-500` branch
-
-Since you are done making the change, let's delete the `feature-circle-500` branch by following these steps:
-
-1. Ensure that you are on the `main` branch.
-
-`git checkout main`
-
-2. Delete the feature-circle-500 branch, the common flag used is -d (lowercase), which stands for "delete"
-
-`git branch -d feature-circle-500`
-
-3. You can confirm the branch was deleted by listing all branches:
-   `git branch`
-
-### Exercise 10: Push your changes to origin
-
-This push will synchronize all the changes that you made on your local system with your fork repository on GitHub.
-To push your update on GitHub, complete the following steps:
-
-1. In the Terminal window, run the following command:
-   `git push origin main`
-
-2. Go to the fork repository in your GitHub account and verify that the local changes have now been added to the main branch.
-
-### Exercise 11: Create a pull request
-
-The final step is to request the original project pull in the changes you've made to your fork. To merge your changes to the original repository, you need to create a pull request.
-To create a pull request, complete the following steps:
-
-1. Ensure you are on the `Code` tab: Click `Contribute` and then `Open pull request`.
-
-2. In the "Comparing changes" panel, GitHub shows you that it is comparing the main branch of your fork to that of the original repository, and that your changes can be merged. Click the `Create pull request` button.
-
-3. You are taken to the `Open pull request` screen. Notice that your commit message appears as the title of the pull request. Click the `Create pull request` button.
-
-Note: For the purposes of this lab, the pull request will be processed and closed automatically.
-
-### Exercise 12: Practice on your own
-
-1. Create a new branch called `feature-add-color`.
-
-`git branch feature-add-color`
-
-2. Make `feature-add-color` the active branch.
-
-`git checkout feature-add-color`
-
-3. Add another css rule as follows:
+1. Create a new file named CONTRIBUTING.md in the root directory of the repository with the following information:
 
 ```
-.red {
-    background-color: red
-}
+All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
 ```
 
-4. Stage this change.
-   `git add -A`
+3. Commit the file into the main branch and check if it is listed on the homepage of the repository.
+   For Option 1: AI-Graded Submission and Evaluation and For Option 2: Peer-Graded Submission and Evaluation
 
-5. Commit the changes in your `feature-add-color`.
+- Copy and save the public GitHub repository URL of CONTRIBUTING.md in a text file to submit later.
 
-`git commit -m 'adding red color feature'`
+### Task 5: Host the Script File
 
-6. Merge the changes in `feature-add-color` into `main`.
+1. Create a new file named simple-interest.sh in the root directory of the repository.
 
-`git checkout main && git merge feature-add-color`
+2. Add the following code in the new file:
 
-7. Delete the `feature-add-color` branch.
+```
+ #!/bin/bash
+   # This script calculates simple interest given principal,
+   # annual rate of interest and time period in years.
+   # Do not use this in production. Sample purpose only.
+   # Author: Upkar Lidder (IBM)
+   # Additional Authors:
+   # <your GitHub username>
+   # Input:
+   # p, principal amount
+   # t, time period in years
+   # r, annual rate of interest
+   # Output:
+   # simple interest = p*t*r
+   echo "Enter the principal:"
+   read p
+   echo "Enter rate of interest per year:"
+   read r
+   echo "Enter time period in years:"
+   read t
+   s=`expr $p \* $t \* $r / 100`
+   echo "The simple interest is: "
+   echo $s
+```
 
-`git branch -d feature-add-color`
+3. Commit the file into the main branch.
 
-8. Push your changes to the origin:
-   `git push orign main`
+For Option 1: AI-Graded Submission and Evaluation and For Option 2: Peer-Graded Submission and Evaluation
 
-9. Create a new pull request for this feature in the upstream repository using the GitHub UI.
-
-#### Summary
-
-This lab demonstrated how to fork an upstream repository into your own account and then clone it locally in the lab environment. You then learned how to synchronize changes in your local repository with remote GitHub repositories using pull requests.
+- Copy and save the public GitHub repository URL of simple-interest.sh in a text file to submit later.
