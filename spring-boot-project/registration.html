@@ -4,76 +4,97 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registration Page</title>
-    <!-- Link to the external CSS file -->
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <style>
+      /* Center the body content */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      /* Style the registration container */
+      .registration-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+      }
+
+      /* Style the form elements */
+      .registration-container h2 {
+        margin-bottom: 20px;
+      }
+
+      .registration-container input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .registration-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .registration-container button:hover {
+        background-color: #218838;
+      }
+
+      /* Flexbox layout for form items */
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .form-group input,
+      .form-group button {
+        width: 100%;
+        max-width: 250px; /* Adjust as needed */
+      }
+
+      .error {
+        color: red;
+        margin-top: 10px;
+      }
+    </style>
   </head>
   <body>
-    <div class="form-container">
-      <h1>Registration Form</h1>
-      <form action="/register" method="post" th:object="${registrationForm}">
-        <!-- First Name -->
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" th:field="*{firstName}" required />
-        <span
-          th:if="${#fields.hasErrors('firstName')}"
-          th:errors="*{firstName}"
-          class="error"
-        ></span>
-        <br />
-
-        <!-- Last Name -->
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" th:field="*{lastName}" required />
-        <span
-          th:if="${#fields.hasErrors('lastName')}"
-          th:errors="*{lastName}"
-          class="error"
-        ></span>
-        <br />
-
-        <!-- Country -->
-        <label for="country">Country:</label>
-        <select id="country" th:field="*{country}" required>
-          <option value="">Select your country</option>
-          <option value="usa">United States</option>
-          <option value="canada">Canada</option>
-          <option value="uk">United Kingdom</option>
-          <option value="australia">Australia</option>
-          <option value="india">India</option>
-        </select>
-        <span
-          th:if="${#fields.hasErrors('country')}"
-          th:errors="*{country}"
-          class="error"
-        ></span>
-        <br />
-
-        <!-- Date of Birth -->
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" th:field="*{dob}" required />
-        <span
-          th:if="${#fields.hasErrors('dob')}"
-          th:errors="*{dob}"
-          class="error"
-        ></span>
-        <br />
-
-        <!-- Email -->
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required />
-        <span
-          th:if="${#fields.hasErrors('email')}"
-          th:errors="*{email}"
-          class="error"
-        ></span>
-        <br />
-
+    <div class="registration-container">
+      <h2>Register</h2>
+      <!-- Login Form -->
+      <form th:action="@{/register}" method="post" class="form-group">
+        <!-- Username -->
+        <input type="text" name="username" placeholder="Username" required />
+        <!-- Password -->
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
         <!-- Submit Button -->
         <button type="submit">Register</button>
       </form>
 
-      <!-- Link back to the home page -->
-      <a th:href="@{/}">Back to Home</a>
+      <!-- Error Message -->
+      <div th:if="${param.error}" class="error">Username already exists</div>
+
+      <!-- Link to Login Page -->
+      <p>Already have an account? <a href="/login">Login here</a></p>
     </div>
   </body>
 </html>
