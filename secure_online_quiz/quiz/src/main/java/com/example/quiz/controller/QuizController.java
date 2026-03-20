@@ -313,7 +313,7 @@ public class QuizController {
      * @param questionId the ID of the question to delete
      * @return ResponseEntity with delete status
      */
-    @DeleteMapping("/quiz/{questionId}")
+    @DeleteMapping("/delete-quiz/{questionId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteQuizQuestion(@PathVariable int questionId) {
         Map<String, Object> response = new HashMap<>();
