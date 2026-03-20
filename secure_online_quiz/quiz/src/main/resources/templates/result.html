@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Application - Results</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .results-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .results-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .results-header h1 {
+        color: #333;
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      .results-header p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 30px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .score-circle.excellent {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+      }
+
+      .score-circle.good {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      }
+
+      .score-circle.average {
+        background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+      }
+
+      .score-circle.poor {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      }
+
+      .score-value {
+        font-size: 48px;
+        font-weight: 700;
+      }
+
+      .score-label {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: 5px;
+      }
+
+      .results-summary {
+        background-color: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .summary-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .summary-label {
+        color: #666;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .summary-value {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .summary-value.correct {
+        color: #27ae60;
+      }
+
+      .summary-value.total {
+        color: #667eea;
+      }
+
+      .feedback-section {
+        background-color: #f0f4ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+        border-left: 4px solid #667eea;
+      }
+
+      .feedback-section.excellent {
+        background-color: #f0fdf4;
+        border-left-color: #27ae60;
+      }
+
+      .feedback-section.good {
+        background-color: #eff6ff;
+        border-left-color: #3498db;
+      }
+
+      .feedback-section.average {
+        background-color: #fffbf0;
+        border-left-color: #f39c12;
+      }
+
+      .feedback-section.poor {
+        background-color: #fef2f2;
+        border-left-color: #e74c3c;
+      }
+
+      .feedback-emoji {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+
+      .feedback-title {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .feedback-message {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .performance-breakdown {
+        margin-bottom: 30px;
+      }
+
+      .performance-title {
+        color: #333;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .performance-bar {
+        background-color: #e0e0e0;
+        height: 30px;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .performance-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        color: white;
+        font-weight: 600;
+        font-size: 13px;
+        transition: width 0.5s ease;
+      }
+
+      .performance-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        color: #333;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .stat-value.correct {
+        color: #27ae60;
+      }
+
+      .stat-value.incorrect {
+        color: #e74c3c;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #e0e0e0;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .btn-retake {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-retake:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-home {
+        background-color: #95a5a6;
+        color: white;
+      }
+
+      .btn-home:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+      }
+
+      .btn-logout {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      .btn-logout:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+      }
+
+      .loading {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e0e0e0;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-state {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .error-state h2 {
+        color: #e74c3c;
+        font-size: 24px;
+        margin-bottom: 15px;
+      }
+
+      .error-state p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 600px) {
+        .results-box {
+          padding: 25px;
+        }
+
+        .results-header h1 {
+          font-size: 24px;
+        }
+
+        .performance-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Results Box -->
+      <div class="results-box">
+        <!-- Header -->
+        <div class="results-header">
+          <h1>Quiz Results</h1>
+          <p>Here's how you performed on the quiz</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+          <div class="spinner"></div>
+          <span>Loading your results...</span>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none">
+          <h2>No Results Found</h2>
+          <p>There are no results to display. Please take the quiz first.</p>
+          <a href="/quiz/quiz" class="btn btn-retake">Take Quiz</a>
+        </div>
+
+        <!-- Results Content -->
+        <div id="resultsContent" style="display: none">
+          <!-- Score Circle -->
+          <div class="score-circle" id="scoreCircle">
+            <div class="score-value" id="scoreValue">0</div>
+            <div class="score-label">Score</div>
+          </div>
+
+          <!-- Feedback Section -->
+          <div class="feedback-section" id="feedbackSection">
+            <div class="feedback-emoji" id="feedbackEmoji">😊</div>
+            <div class="feedback-title" id="feedbackTitle">Great Job!</div>
+            <div class="feedback-message" id="feedbackMessage">
+              You performed excellently on this quiz!
+            </div>
+          </div>
+
+          <!-- Results Summary -->
+          <div class="results-summary">
+            <div class="summary-item">
+              <span class="summary-label">Total Questions</span>
+              <span class="summary-value total" id="totalQuestions">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Correct Answers</span>
+              <span class="summary-value correct" id="correctAnswers">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Incorrect Answers</span>
+              <span class="summary-value" id="incorrectAnswers">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Percentage</span>
+              <span class="summary-value total" id="percentage">0%</span>
+            </div>
+          </div>
+
+          <!-- Performance Breakdown -->
+          <div class="performance-breakdown">
+            <div class="performance-title">Performance Overview</div>
+            <div class="performance-stats">
+              <div class="stat-card">
+                <div class="stat-label">Correct</div>
+                <div class="stat-value correct" id="correctCount">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Skipped</div>
+                <div class="stat-value" id="skippedCount">0</div>
+              </div>
+            </div>
+            <div class="performance-bar">
+              <div
+                class="performance-fill"
+                id="performanceFill"
+                style="width: 0%"
+              >
+                <span id="performancePercent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <a href="/quiz/quiz" class="btn btn-retake">Retake Quiz</a>
+            <a
+              href="/quiz/logout"
+              th:href="@{/quiz/logout}"
+              class="btn btn-logout"
+              >Logout</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Load results on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        const storedResults = sessionStorage.getItem("quizResults");
+
+        if (storedResults) {
+          try {
+            const results = JSON.parse(storedResults);
+            displayResults(results);
+            // Clear the stored results
+            sessionStorage.removeItem("quizResults");
+          } catch (error) {
+            console.error("Error parsing results:", error);
+            showErrorState();
+          }
+        } else {
+          showErrorState();
+        }
+      });
+
+      function displayResults(results) {
+        document.getElementById("loadingState").style.display = "none";
+        document.getElementById("resultsContent").style.display = "block";
+
+        // Extract results data
+        const score = results.score || 0;
+        const correctAnswers = results.correctAnswers || 0;
+        const totalQuestions = results.totalQuestions || 0;
+        const incorrectAnswers = totalQuestions - correctAnswers;
+
+        // Update score circle and class
+        const scoreCircle = document.getElementById("scoreCircle");
+        scoreCircle.classList.remove("excellent", "good", "average", "poor");
+
+        if (score >= 80) {
+          scoreCircle.classList.add("excellent");
+        } else if (score >= 60) {
+          scoreCircle.classList.add("good");
+        } else if (score >= 40) {
+          scoreCircle.classList.add("average");
+        } else {
+          scoreCircle.classList.add("poor");
+        }
+
+        document.getElementById("scoreValue").textContent = score;
+
+        // Update feedback section
+        const feedbackSection = document.getElementById("feedbackSection");
+        const feedbackTitle = document.getElementById("feedbackTitle");
+        const feedbackEmoji = document.getElementById("feedbackEmoji");
+        const feedbackMessage = document.getElementById("feedbackMessage");
+
+        feedbackSection.classList.remove(
+          "excellent",
+          "good",
+          "average",
+          "poor",
+        );
+
+        if (score >= 80) {
+          feedbackSection.classList.add("excellent");
+          feedbackEmoji.textContent = "🎉";
+          feedbackTitle.textContent = "Excellent!";
+          feedbackMessage.textContent =
+            "Outstanding performance! You demonstrated excellent understanding of the material.";
+        } else if (score >= 60) {
+          feedbackSection.classList.add("good");
+          feedbackEmoji.textContent = "👍";
+          feedbackTitle.textContent = "Good Job!";
+          feedbackMessage.textContent =
+            "Well done! You showed a solid understanding of the topics.";
+        } else if (score >= 40) {
+          feedbackSection.classList.add("average");
+          feedbackEmoji.textContent = "😊";
+          feedbackTitle.textContent = "Not Bad";
+          feedbackMessage.textContent =
+            "You passed the quiz! Review the material to improve further.";
+        } else {
+          feedbackSection.classList.add("poor");
+          feedbackEmoji.textContent = "📚";
+          feedbackTitle.textContent = "Keep Learning";
+          feedbackMessage.textContent =
+            "Don't give up! Review the material and try again to improve your score.";
+        }
+
+        // Update summary
+        document.getElementById("totalQuestions").textContent = totalQuestions;
+        document.getElementById("correctAnswers").textContent = correctAnswers;
+        document.getElementById("incorrectAnswers").textContent =
+          incorrectAnswers;
+        document.getElementById("percentage").textContent = score + "%";
+
+        // Update performance breakdown
+        document.getElementById("correctCount").textContent = correctAnswers;
+        document.getElementById("skippedCount").textContent = "0";
+
+        // Update progress bar
+        const performanceFill = document.getElementById("performanceFill");
+        performanceFill.style.width = score + "%";
+        document.getElementById("performancePercent").textContent = score + "%";
+
+        // Add animation delay
+        setTimeout(() => {
+          performanceFill.style.transition = "width 0.8s ease";
+        }, 100);
+      }
+
+      function showErrorState() {
+        document.getElementById("loadingState").style.display = "none";
+        document.getElementById("errorState").style.display = "block";
+      }
+    </script>
+  </body>
+</html>

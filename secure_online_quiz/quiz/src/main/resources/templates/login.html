@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="text"]:invalid:focus,
+        input[type="password"]:invalid:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .register-link p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .register-link a {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Quiz Application</h1>
+                <p>Secure Online Quiz Platform</p>
+            </div>
+
+            <!-- Success Message -->
+            <div class="alert alert-success" id="successAlert" th:if="${param.registered}">
+                <strong>Registration Successful!</strong> Please login with your credentials.
+            </div>
+
+            <!-- Error Message -->
+            <div class="alert alert-danger" id="errorAlert" th:if="${param.error}">
+                <strong>Login Failed!</strong> Invalid username or password.
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" method="post" th:action="@{/quiz/login}" novalidate>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username"
+                        required
+                        minlength="3"
+                        maxlength="50"
+                        pattern="[a-zA-Z0-9_]+"
+                        title="Username must contain only letters, numbers, and underscores">
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                        minlength="6"
+                        maxlength="100"
+                        title="Password must be at least 6 characters">
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">Login</button>
+            </form>
+
+            <!-- Registration Link -->
+            <div class="register-link">
+                <p>Don't have an account?</p>
+                <a href="/quiz/register" th:href="@{/quiz/register}">Create a new account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form validation script
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const loginButton = document.getElementById('loginButton');
+
+        // Real-time validation for username
+        usernameInput.addEventListener('blur', validateUsername);
+        usernameInput.addEventListener('input', clearUsernameError);
+
+        // Real-time validation for password
+        passwordInput.addEventListener('blur', validatePassword);
+        passwordInput.addEventListener('input', clearPasswordError);
+
+        function validateUsername() {
+            const username = usernameInput.value.trim();
+            
+            if (username === '') {
+                showUsernameError('Username is required');
+                return false;
+            }
+            
+            if (username.length < 3) {
+                showUsernameError('Username must be at least 3 characters');
+                return false;
+            }
+            
+            if (username.length > 50) {
+                showUsernameError('Username cannot exceed 50 characters');
+                return false;
+            }
+            
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showUsernameError('Username can only contain letters, numbers, and underscores');
+                return false;
+            }
+            
+            clearUsernameError();
+            return true;
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            
+            if (password === '') {
+                showPasswordError('Password is required');
+                return false;
+            }
+            
+            if (password.length < 6) {
+                showPasswordError('Password must be at least 6 characters');
+                return false;
+            }
+            
+            if (password.length > 100) {
+                showPasswordError('Password cannot exceed 100 characters');
+                return false;
+            }
+            
+            clearPasswordError();
+            return true;
+        }
+
+        function showUsernameError(message) {
+            usernameError.textContent = message;
+            usernameError.classList.add('show');
+            usernameInput.style.borderColor = '#e74c3c';
+        }
+
+        function clearUsernameError() {
+            usernameError.classList.remove('show');
+            usernameInput.style.borderColor = '#e0e0e0';
+        }
+
+        function showPasswordError(message) {
+            passwordError.textContent = message;
+            passwordError.classList.add('show');
+            passwordInput.style.borderColor = '#e74c3c';
+        }
+
+        function clearPasswordError() {
+            passwordError.classList.remove('show');
+            passwordInput.style.borderColor = '#e0e0e0';
+        }
+
+        // Form submission validation
+        loginForm.addEventListener('submit', function(e) {
+            const isUsernameValid = validateUsername();
+            const isPasswordValid = validatePassword();
+            
+            if (!isUsernameValid || !isPasswordValid) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable button during submission
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging in...';
+        });
+
+        // Clear errors on focus
+        usernameInput.addEventListener('focus', clearUsernameError);
+        passwordInput.addEventListener('focus', clearPasswordError);
+    </script>
+</body>
+</html>

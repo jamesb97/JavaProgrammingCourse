@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Application - Edit Quiz</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .form-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-header {
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 20px;
+      }
+
+      .form-header h1 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 5px;
+      }
+
+      .form-header p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      label .required {
+        color: #e74c3c;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+        font-family: inherit;
+      }
+
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      input:disabled {
+        background-color: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 13px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .alert {
+        padding: 15px 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+      }
+
+      .options-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 25px;
+      }
+
+      .options-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .options-header h3 {
+        color: #333;
+        font-size: 16px;
+      }
+
+      .option-item {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+      }
+
+      .option-item:hover {
+        border-color: #667eea;
+      }
+
+      .option-item.correct {
+        border-color: #27ae60;
+        background-color: #f0fdf4;
+      }
+
+      .option-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .option-label {
+        flex: 1;
+      }
+
+      .option-label label {
+        margin-bottom: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .option-label input[type="radio"] {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+      }
+
+      .option-label input[type="radio"]:focus {
+        box-shadow: none;
+      }
+
+      .option-input {
+        display: flex;
+        gap: 10px;
+      }
+
+      .option-input input {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .btn-remove {
+        padding: 8px 12px;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-remove:hover {
+        background-color: #c0392b;
+      }
+
+      .btn-add-option {
+        padding: 10px 20px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-add-option:hover {
+        background-color: #229954;
+        transform: translateY(-2px);
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-cancel {
+        background-color: #95a5a6;
+        color: white;
+      }
+
+      .btn-cancel:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+      }
+
+      .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+        margin-left: auto;
+      }
+
+      .btn-delete:hover {
+        background-color: #c0392b;
+      }
+
+      @media (max-width: 600px) {
+        .option-controls {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .option-label {
+          width: 100%;
+        }
+
+        .form-actions {
+          flex-direction: column;
+        }
+
+        .btn-delete {
+          margin-left: 0;
+          order: -1;
+        }
+      }
+
+      .info-text {
+        color: #666;
+        font-size: 13px;
+        margin-top: 8px;
+        font-style: italic;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #e0e0e0;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-box">
+        <div class="form-header">
+          <h1 id="formTitle">Edit Quiz Question</h1>
+          <p id="formSubtitle">Update the quiz question details below</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-danger" id="errorAlert"></div>
+
+        <!-- Warning Message -->
+        <div
+          class="alert alert-warning"
+          id="warningAlert"
+          style="display: none"
+        >
+          <strong>Note:</strong> No question ID provided. Please go back and
+          select a question to edit.
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loadingIndicator">
+          <div class="spinner"></div>
+          <span>Loading question details...</span>
+        </div>
+
+        <!-- Quiz Form -->
+        <form id="quizForm" style="display: none" novalidate>
+          <!-- Question ID (Read-only in edit mode) -->
+          <div class="form-group">
+            <label for="questionId">
+              Question ID
+              <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="questionId"
+              name="id"
+              placeholder="e.g., 1"
+              required
+              min="1"
+              disabled
+            />
+            <div class="info-text">Question ID cannot be changed</div>
+          </div>
+
+          <!-- Question Text -->
+          <div class="form-group">
+            <label for="questionText">
+              Question Text
+              <span class="required">*</span>
+            </label>
+            <textarea
+              id="questionText"
+              name="questionText"
+              placeholder="Enter your question here..."
+              required
+              minlength="10"
+              maxlength="500"
+            ></textarea>
+            <div class="error-message" id="questionError"></div>
+          </div>
+
+          <!-- Options Section -->
+          <div class="options-section">
+            <div class="options-header">
+              <h3>Answer Options</h3>
+              <button
+                type="button"
+                class="btn-add-option"
+                onclick="addOption()"
+              >
+                + Add Option
+              </button>
+            </div>
+
+            <div id="optionsContainer"></div>
+
+            <div class="error-message" id="optionsError"></div>
+          </div>
+
+          <!-- Correct Answer Display -->
+          <div class="form-group" style="margin-top: 25px">
+            <label>
+              <span class="required">*</span>
+              Correct Answer
+            </label>
+            <div id="correctAnswerSection" style="display: none">
+              <input
+                type="hidden"
+                id="correctAnswerInput"
+                name="correctAnswer"
+              />
+              <div
+                id="correctAnswerDisplay"
+                style="
+                  color: #666;
+                  font-size: 14px;
+                  padding: 10px;
+                  background-color: #f0fdf4;
+                  border-radius: 5px;
+                  border: 1px solid #27ae60;
+                "
+              ></div>
+            </div>
+            <div class="info-text">
+              Select one option as the correct answer by clicking the radio
+              button next to it.
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-submit" id="submitBtn">
+              Update Question
+            </button>
+            <button
+              type="button"
+              class="btn btn-delete"
+              id="deleteBtn"
+              onclick="deleteQuestion()"
+            >
+              Delete Question
+            </button>
+            <a href="/quiz/quizlist" class="btn btn-cancel">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      id="deleteModal"
+      class="modal"
+      style="
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      "
+    >
+      <div
+        style="
+          background-color: white;
+          margin: 10% auto;
+          padding: 30px;
+          border-radius: 10px;
+          width: 90%;
+          max-width: 400px;
+          text-align: center;
+        "
+      >
+        <h2 style="color: #333; font-size: 20px; margin-bottom: 15px">
+          Confirm Delete
+        </h2>
+        <p
+          id="deleteMessage"
+          style="color: #666; margin-bottom: 25px; font-size: 14px"
+        ></p>
+        <div style="display: flex; gap: 10px; justify-content: center">
+          <button
+            onclick="confirmDelete()"
+            style="
+              padding: 10px 20px;
+              background-color: #e74c3c;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 600;
+            "
+          >
+            Delete
+          </button>
+          <button
+            onclick="closeDeleteModal()"
+            style="
+              padding: 10px 20px;
+              background-color: #95a5a6;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 600;
+            "
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const editId = urlParams.get("id");
+      let optionCount = 0;
+      let selectedCorrectAnswer = null;
+      let allQuestions = [];
+
+      // Initialize form
+      document.addEventListener("DOMContentLoaded", function () {
+        if (editId) {
+          loadQuestionForEdit(editId);
+        } else {
+          showWarning("No question selected for editing");
+          document.getElementById("loadingIndicator").style.display = "none";
+        }
+      });
+
+      function loadQuestionForEdit(questionId) {
+        fetch(`/quiz/questions`)
+          .then((response) => {
+            if (!response.ok) throw new Error("Failed to load questions");
+            return response.json();
+          })
+          .then((questions) => {
+            allQuestions = questions;
+            const question = questions.find((q) => q.id == questionId);
+            if (question) {
+              populateForm(question);
+            } else {
+              showError("Question not found");
+              document.getElementById("loadingIndicator").style.display =
+                "none";
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading question:", error);
+            showError("Failed to load question details");
+            document.getElementById("loadingIndicator").style.display = "none";
+          });
+      }
+
+      function populateForm(question) {
+        document.getElementById("loadingIndicator").style.display = "none";
+        document.getElementById("quizForm").style.display = "block";
+
+        document.getElementById("questionId").value = question.id;
+        document.getElementById("questionText").value = question.questionText;
+
+        // Load options
+        const container = document.getElementById("optionsContainer");
+        container.innerHTML = "";
+        optionCount = 0;
+
+        if (question.options && question.options.length > 0) {
+          question.options.forEach((option, index) => {
+            addOption(option, option === question.correctAnswer);
+          });
+        }
+
+        document.getElementById("submitBtn").textContent = "Update Question";
+      }
+
+      function addOption(optionText = "", isCorrect = false) {
+        optionCount++;
+        const id = `option_${optionCount}`;
+        const container = document.getElementById("optionsContainer");
+
+        const optionItem = document.createElement("div");
+        optionItem.className = `option-item ${isCorrect ? "correct" : ""}`;
+        optionItem.id = `option_item_${optionCount}`;
+        optionItem.innerHTML = `
+                <div class="option-controls">
+                    <div class="option-label">
+                        <label>
+                            <input 
+                                type="radio" 
+                                name="correctOnlyRadio" 
+                                value="${id}"
+                                onchange="selectCorrectAnswer('${id}', '${escapeQuotes(optionText)}')"
+                                ${isCorrect ? "checked" : ""}>
+                            Correct Answer
+                        </label>
+                    </div>
+                    <div class="option-input">
+                        <input 
+                            type="text" 
+                            id="${id}"
+                            class="option-input-field"
+                            placeholder="Enter option text..."
+                            value="${optionText}"
+                            required
+                            maxlength="150"
+                            onchange="updateCorrectAnswerIfSelected('${id}')">
+                        ${container.children.length > 0 ? `<button type="button" class="btn-remove" onclick="removeOption('${optionCount}')">Remove</button>` : ""}
+                    </div>
+                </div>
+            `;
+
+        container.appendChild(optionItem);
+
+        // Set initial correct answer if not set yet
+        if (!selectedCorrectAnswer && container.children.length === 1) {
+          setTimeout(() => {
+            selectCorrectAnswer(id, optionText);
+          }, 0);
+        }
+
+        updateRemoveButtons();
+      }
+
+      function removeOption(optionNumber) {
+        const optionItem = document.getElementById(
+          `option_item_${optionNumber}`,
+        );
+        if (optionItem) {
+          const wasSelected = document.querySelector(
+            `input[value="option_${optionNumber}"]`,
+          ).checked;
+          optionItem.remove();
+
+          if (wasSelected) {
+            const firstRadio = document.querySelector(
+              'input[name="correctOnlyRadio"]',
+            );
+            if (firstRadio) {
+              firstRadio.click();
+            }
+          }
+
+          updateRemoveButtons();
+        }
+      }
+
+      function updateRemoveButtons() {
+        const container = document.getElementById("optionsContainer");
+        document.querySelectorAll(".btn-remove").forEach((btn) => {
+          btn.style.display = container.children.length > 1 ? "block" : "none";
+        });
+      }
+
+      function selectCorrectAnswer(optionId, answerText) {
+        const section = document.getElementById("correctAnswerSection");
+        section.style.display = "block";
+
+        selectedCorrectAnswer = answerText;
+        document.getElementById("correctAnswerInput").value = answerText;
+        document.getElementById("correctAnswerDisplay").innerHTML =
+          `<strong>Selected:</strong> ${escapeHtml(answerText)}`;
+
+        document.querySelectorAll(".option-item").forEach((item) => {
+          item.classList.remove("correct");
+        });
+        document
+          .querySelectorAll('input[name="correctOnlyRadio"]:checked')
+          .forEach((radio) => {
+            const optionValue = radio.value;
+            const optionItem = document
+              .querySelector(`#${optionValue}`)
+              .closest(".option-item");
+            if (optionItem) {
+              optionItem.classList.add("correct");
+            }
+          });
+      }
+
+      function updateCorrectAnswerIfSelected(optionId) {
+        const radio = document.querySelector(`input[value="${optionId}"]`);
+        if (radio && radio.checked) {
+          const newText = document.getElementById(optionId).value;
+          selectCorrectAnswer(optionId, newText);
+        }
+      }
+
+      // Form submission
+      const form = document.getElementById("quizForm");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        clearAllErrors();
+
+        const isValid = validateForm();
+        if (!isValid) {
+          return;
+        }
+
+        const id = parseInt(document.getElementById("questionId").value);
+        const questionText = document.getElementById("questionText").value;
+        const correctAnswer =
+          document.getElementById("correctAnswerInput").value;
+
+        const options = [];
+        let correctAnswerIndex = -1;
+        document
+          .querySelectorAll(".option-input-field")
+          .forEach((input, index) => {
+            const value = input.value.trim();
+            options.push(value);
+            if (value === correctAnswer) {
+              correctAnswerIndex = index;
+            }
+          });
+
+        const params = new URLSearchParams({
+          id: id,
+          questionText: questionText,
+          options: options.join(","),
+          correctAnswerIndex: correctAnswerIndex,
+          correctAnswer: correctAnswer,
+        });
+
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Updating...";
+
+        fetch(`/quiz/edit-quiz/${id}?${params}`, {
+          method: "PUT",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = "/quiz/quizlist?success=true";
+            } else {
+              showError(data.message || "Failed to update question");
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Update Question";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showError("Error updating question. Please try again.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Update Question";
+          });
+      });
+
+      function validateForm() {
+        let isValid = true;
+
+        const questionText = document
+          .getElementById("questionText")
+          .value.trim();
+        if (!questionText || questionText.length < 10) {
+          showFieldError("Question", "Question must be at least 10 characters");
+          isValid = false;
+        }
+
+        const optionInputs = document.querySelectorAll(".option-input-field");
+        if (optionInputs.length < 2) {
+          showFieldError("Options", "Please add at least 2 options");
+          isValid = false;
+        }
+
+        optionInputs.forEach((input) => {
+          if (!input.value.trim()) {
+            showFieldError("Options", "All options must have text");
+            isValid = false;
+          }
+        });
+
+        if (!selectedCorrectAnswer) {
+          showFieldError("Options", "Please select a correct answer");
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      function showFieldError(field, message) {
+        const errorMap = {
+          Question: "questionError",
+          Options: "optionsError",
+        };
+
+        const elementId = errorMap[field];
+        if (elementId) {
+          const element = document.getElementById(elementId);
+          element.textContent = message;
+          element.classList.add("show");
+        }
+      }
+
+      function deleteQuestion() {
+        const id = document.getElementById("questionId").value;
+        const question = allQuestions.find((q) => q.id == id);
+        if (question) {
+          document.getElementById("deleteMessage").textContent =
+            `Are you sure you want to delete question "${escapeHtml(question.questionText)}"? This action cannot be undone.`;
+          document.getElementById("deleteModal").style.display = "block";
+        }
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+      }
+
+      function confirmDelete() {
+        const id = parseInt(document.getElementById("questionId").value);
+        const deleteBtn = document.getElementById("deleteBtn");
+        deleteBtn.disabled = true;
+        deleteBtn.textContent = "Deleting...";
+
+        fetch(`/quiz/quiz/${id}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = "/quiz/quizlist?success=true";
+            } else {
+              showError("Failed to delete question");
+              deleteBtn.disabled = false;
+              deleteBtn.textContent = "Delete Question";
+              closeDeleteModal();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showError("Error deleting question");
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = "Delete Question";
+            closeDeleteModal();
+          });
+      }
+
+      function showError(message) {
+        const alert = document.getElementById("errorAlert");
+        alert.textContent = message;
+        alert.classList.add("show");
+      }
+
+      function showWarning(message) {
+        const alert = document.getElementById("warningAlert");
+        alert.textContent = message;
+        alert.style.display = "block";
+      }
+
+      function clearAllErrors() {
+        document.querySelectorAll(".error-message").forEach((el) => {
+          el.classList.remove("show");
+        });
+        document.getElementById("errorAlert").classList.remove("show");
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        };
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+      }
+
+      function escapeQuotes(text) {
+        return text.replace(/'/g, "\\'").replace(/"/g, '\\"');
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modal = document.getElementById("deleteModal");
+        if (event.target === modal) {
+          closeDeleteModal();
+        }
+      };
+    </script>
+  </body>
+</html>

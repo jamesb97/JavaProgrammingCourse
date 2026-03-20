@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Application - Registration</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+      }
+
+      .registration-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .registration-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .registration-header h1 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .registration-header p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      label .required {
+        color: #e74c3c;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+        font-family: inherit;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      input:invalid:focus,
+      select:invalid:focus {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+      }
+
+      select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 20px;
+        padding-right: 35px;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 13px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .success-message {
+        color: #27ae60;
+        font-size: 13px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .registration-button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        margin-top: 10px;
+      }
+
+      .registration-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .registration-button:active {
+        transform: translateY(0);
+      }
+
+      .registration-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .login-link p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .login-link a {
+        display: inline-block;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .login-link a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+      }
+
+      .alert {
+        padding: 12px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .password-strength {
+        margin-top: 5px;
+        height: 5px;
+        border-radius: 3px;
+        background-color: #e0e0e0;
+        display: none;
+      }
+
+      .password-strength.show {
+        display: block;
+      }
+
+      .password-strength-bar {
+        height: 100%;
+        border-radius: 3px;
+        width: 0;
+        transition:
+          width 0.3s ease,
+          background-color 0.3s ease;
+      }
+
+      .password-strength-bar.weak {
+        width: 33%;
+        background-color: #e74c3c;
+      }
+
+      .password-strength-bar.fair {
+        width: 66%;
+        background-color: #f39c12;
+      }
+
+      .password-strength-bar.good {
+        width: 100%;
+        background-color: #27ae60;
+      }
+
+      .password-strength-text {
+        font-size: 12px;
+        margin-top: 3px;
+        font-weight: 500;
+      }
+
+      .password-strength-text.weak {
+        color: #e74c3c;
+      }
+
+      .password-strength-text.fair {
+        color: #f39c12;
+      }
+
+      .password-strength-text.good {
+        color: #27ae60;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="registration-box">
+        <div class="registration-header">
+          <h1>Create Account</h1>
+          <p>Join the Secure Online Quiz Platform</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-danger" id="errorAlert" th:if="${param.error}">
+          <strong>Registration Failed!</strong> Please check your input and try
+          again.
+        </div>
+
+        <!-- Success Message -->
+        <div
+          class="alert alert-success"
+          id="successAlert"
+          th:if="${param.success}"
+        >
+          <strong>Registration Successful!</strong> Redirecting to login page...
+        </div>
+
+        <!-- Registration Form -->
+        <form
+          id="registrationForm"
+          method="post"
+          th:action="@{/quiz/register}"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="username">
+              Username
+              <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              required
+              minlength="3"
+              maxlength="50"
+              pattern="[a-zA-Z0-9_]+"
+              title="Username must contain only letters, numbers, and underscores"
+            />
+            <div class="error-message" id="usernameError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              Email Address
+              <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email address"
+              required
+              maxlength="100"
+              title="Please enter a valid email address"
+            />
+            <div class="error-message" id="emailError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              Password
+              <span class="required">*</span>
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a strong password"
+              required
+              minlength="6"
+              maxlength="100"
+              title="Password must be at least 6 characters"
+            />
+            <div class="error-message" id="passwordError"></div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="password-strength-bar" id="passwordStrengthBar"></div>
+              <div
+                class="password-strength-text"
+                id="passwordStrengthText"
+              ></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">
+              Confirm Password
+              <span class="required">*</span>
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Re-enter your password"
+              required
+              minlength="6"
+              maxlength="100"
+              title="Passwords must match"
+            />
+            <div class="error-message" id="confirmPasswordError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="role">
+              User Role
+              <span class="required">*</span>
+            </label>
+            <select id="role" name="role" required>
+              <option value="">-- Select a Role --</option>
+              <option value="USER">User (Quiz Taker)</option>
+              <option value="ADMIN">Admin (Quiz Manager)</option>
+            </select>
+            <div class="error-message" id="roleError"></div>
+          </div>
+
+          <button
+            type="submit"
+            class="registration-button"
+            id="registrationButton"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+          <p>Already have an account?</p>
+          <a href="/quiz/login" th:href="@{/quiz/login}">Sign in here</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Form validation script
+      const registrationForm = document.getElementById("registrationForm");
+      const usernameInput = document.getElementById("username");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const roleInput = document.getElementById("role");
+
+      const usernameError = document.getElementById("usernameError");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      const confirmPasswordError = document.getElementById(
+        "confirmPasswordError",
+      );
+      const roleError = document.getElementById("roleError");
+      const passwordStrength = document.getElementById("passwordStrength");
+      const passwordStrengthBar = document.getElementById(
+        "passwordStrengthBar",
+      );
+      const passwordStrengthText = document.getElementById(
+        "passwordStrengthText",
+      );
+
+      const registrationButton = document.getElementById("registrationButton");
+
+      // Real-time validation for username
+      usernameInput.addEventListener("blur", validateUsername);
+      usernameInput.addEventListener("input", clearUsernameError);
+
+      // Real-time validation for email
+      emailInput.addEventListener("blur", validateEmail);
+      emailInput.addEventListener("input", clearEmailError);
+
+      // Real-time validation for password
+      passwordInput.addEventListener("blur", validatePassword);
+      passwordInput.addEventListener("input", () => {
+        clearPasswordError();
+        updatePasswordStrength();
+        validateConfirmPassword();
+      });
+
+      // Real-time validation for confirm password
+      confirmPasswordInput.addEventListener("blur", validateConfirmPassword);
+      confirmPasswordInput.addEventListener("input", clearConfirmPasswordError);
+
+      // Real-time validation for role
+      roleInput.addEventListener("change", clearRoleError);
+
+      function validateUsername() {
+        const username = usernameInput.value.trim();
+
+        if (username === "") {
+          showUsernameError("Username is required");
+          return false;
+        }
+
+        if (username.length < 3) {
+          showUsernameError("Username must be at least 3 characters");
+          return false;
+        }
+
+        if (username.length > 50) {
+          showUsernameError("Username cannot exceed 50 characters");
+          return false;
+        }
+
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          showUsernameError(
+            "Username can only contain letters, numbers, and underscores",
+          );
+          return false;
+        }
+
+        clearUsernameError();
+        return true;
+      }
+
+      function validateEmail() {
+        const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email === "") {
+          showEmailError("Email is required");
+          return false;
+        }
+
+        if (!emailRegex.test(email)) {
+          showEmailError("Please enter a valid email address");
+          return false;
+        }
+
+        if (email.length > 100) {
+          showEmailError("Email cannot exceed 100 characters");
+          return false;
+        }
+
+        clearEmailError();
+        return true;
+      }
+
+      function validatePassword() {
+        const password = passwordInput.value;
+
+        if (password === "") {
+          showPasswordError("Password is required");
+          return false;
+        }
+
+        if (password.length < 6) {
+          showPasswordError("Password must be at least 6 characters");
+          return false;
+        }
+
+        if (password.length > 100) {
+          showPasswordError("Password cannot exceed 100 characters");
+          return false;
+        }
+
+        clearPasswordError();
+        return true;
+      }
+
+      function validateConfirmPassword() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (confirmPassword === "") {
+          showConfirmPasswordError("Please confirm your password");
+          return false;
+        }
+
+        if (password !== confirmPassword) {
+          showConfirmPasswordError("Passwords do not match");
+          return false;
+        }
+
+        clearConfirmPasswordError();
+        return true;
+      }
+
+      function validateRole() {
+        const role = roleInput.value;
+
+        if (role === "") {
+          showRoleError("Please select a role");
+          return false;
+        }
+
+        clearRoleError();
+        return true;
+      }
+
+      function updatePasswordStrength() {
+        const password = passwordInput.value;
+        passwordStrength.classList.add("show");
+
+        let strength = 0;
+
+        // Check for various password criteria
+        if (password.length >= 6) strength++;
+        if (password.length >= 12) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+        // Update strength indicator
+        const strengthBar = document.querySelector(".password-strength-bar");
+        const strengthText = document.querySelector(".password-strength-text");
+
+        strengthBar.className = "password-strength-bar";
+        strengthText.className = "password-strength-text";
+
+        if (strength <= 1) {
+          strengthBar.classList.add("weak");
+          strengthText.classList.add("weak");
+          strengthText.textContent = "Weak";
+        } else if (strength <= 3) {
+          strengthBar.classList.add("fair");
+          strengthText.classList.add("fair");
+          strengthText.textContent = "Fair";
+        } else {
+          strengthBar.classList.add("good");
+          strengthText.classList.add("good");
+          strengthText.textContent = "Strong";
+        }
+      }
+
+      function showUsernameError(message) {
+        usernameError.textContent = message;
+        usernameError.classList.add("show");
+        usernameInput.style.borderColor = "#e74c3c";
+      }
+
+      function clearUsernameError() {
+        usernameError.classList.remove("show");
+        usernameInput.style.borderColor = "#e0e0e0";
+      }
+
+      function showEmailError(message) {
+        emailError.textContent = message;
+        emailError.classList.add("show");
+        emailInput.style.borderColor = "#e74c3c";
+      }
+
+      function clearEmailError() {
+        emailError.classList.remove("show");
+        emailInput.style.borderColor = "#e0e0e0";
+      }
+
+      function showPasswordError(message) {
+        passwordError.textContent = message;
+        passwordError.classList.add("show");
+        passwordInput.style.borderColor = "#e74c3c";
+      }
+
+      function clearPasswordError() {
+        passwordError.classList.remove("show");
+        passwordInput.style.borderColor = "#e0e0e0";
+      }
+
+      function showConfirmPasswordError(message) {
+        confirmPasswordError.textContent = message;
+        confirmPasswordError.classList.add("show");
+        confirmPasswordInput.style.borderColor = "#e74c3c";
+      }
+
+      function clearConfirmPasswordError() {
+        confirmPasswordError.classList.remove("show");
+        confirmPasswordInput.style.borderColor = "#e0e0e0";
+      }
+
+      function showRoleError(message) {
+        roleError.textContent = message;
+        roleError.classList.add("show");
+        roleInput.style.borderColor = "#e74c3c";
+      }
+
+      function clearRoleError() {
+        roleError.classList.remove("show");
+        roleInput.style.borderColor = "#e0e0e0";
+      }
+
+      // Form submission validation
+      registrationForm.addEventListener("submit", function (e) {
+        const isUsernameValid = validateUsername();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
+        const isRoleValid = validateRole();
+
+        if (
+          !isUsernameValid ||
+          !isEmailValid ||
+          !isPasswordValid ||
+          !isConfirmPasswordValid ||
+          !isRoleValid
+        ) {
+          e.preventDefault();
+          return false;
+        }
+
+        // Disable button during submission
+        registrationButton.disabled = true;
+        registrationButton.textContent = "Creating Account...";
+      });
+
+      // Clear errors on focus
+      usernameInput.addEventListener("focus", clearUsernameError);
+      emailInput.addEventListener("focus", clearEmailError);
+      passwordInput.addEventListener("focus", clearPasswordError);
+      confirmPasswordInput.addEventListener("focus", clearConfirmPasswordError);
+      roleInput.addEventListener("focus", clearRoleError);
+    </script>
+  </body>
+</html>

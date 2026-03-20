@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Application - Registration</title>
+  </head>
+  <body>
+    <h1>Create Account</h1>
+    <p>Join the Secure Online Quiz Platform</p>
+
+    <div id="errorAlert" th:if="${param.error}">
+      <strong>Registration Failed!</strong> Please check your input and try again.
+    </div>
+
+    <div id="successAlert" th:if="${param.success}">
+      <strong>Registration Successful!</strong> Redirecting to login page...
+    </div>
+
+    <form id="registrationForm" method="post" th:action="@{/quiz/register}">
+      <div>
+        <label for="username">Username <span>*</span></label>
+        <input type="text" id="username" name="username" placeholder="Choose a username" required minlength="3" maxlength="50" />
+      </div>
+
+      <div>
+        <label for="email">Email Address <span>*</span></label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" required maxlength="100" />
+      </div>
+
+      <div>
+        <label for="password">Password <span>*</span></label>
+        <input type="password" id="password" name="password" placeholder="Create a strong password" required minlength="6" maxlength="100" />
+      </div>
+
+      <div>
+        <label for="role">User Role <span>*</span></label>
+        <select id="role" name="role" required>
+          <option value="">-- Select a Role --</option>
+          <option value="USER">User (Quiz Taker)</option>
+          <option value="ADMIN">Admin (Quiz Manager)</option>
+        </select>
+      </div>
+
+      <button type="submit" id="registrationButton">Create Account</button>
+    </form>
+
+    <div>
+      <p>Already have an account?</p>
+      <a href="/quiz/login" th:href="@{/quiz/login}">Sign in here</a>
+    </div>
+  </body>
+</html>
