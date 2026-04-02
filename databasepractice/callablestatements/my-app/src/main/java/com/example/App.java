@@ -1,3 +1,5 @@
+package com.example;
+
 import java.util.Properties;
 import java.sql.*;
 import java.io.IOException;
