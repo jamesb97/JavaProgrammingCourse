@@ -16,15 +16,26 @@ public class CoffeeShop {
     }
 
     // Helper method to process orders
+    // private static void orderCoffee(String coffeeType) {
+    // System.out.println("\n📝 Customer orders: " + coffeeType);
+
+    // Use factory instead of 'new' - this is the key!
+    // Coffee coffee = CoffeeFactory.createCoffee(coffeeType);
+
+    // if (coffee != null) {
+    // coffee.brew();
+    // System.out.println("💰 Price: $" + coffee.getPrice());
+    // }
+    // }
     private static void orderCoffee(String coffeeType) {
-        System.out.println("\n📝 Customer orders: " + coffeeType);
+        System.out.println("\nCustomer orders: " + coffeeType);
 
-        // Use factory instead of 'new' - this is the key!
-        Coffee coffee = CoffeeFactory.createCoffee(coffeeType);
-
-        if (coffee != null) {
+        try {
+            Coffee coffee = CoffeeFactory.createCoffee(coffeeType);
             coffee.brew();
-            System.out.println("💰 Price: $" + coffee.getPrice());
+            System.out.println("Price: $" + coffee.getPrice());
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
