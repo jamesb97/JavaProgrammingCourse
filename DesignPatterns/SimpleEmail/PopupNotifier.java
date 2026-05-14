@@ -5,10 +5,18 @@ package com.example.email;
  */
 public class PopupNotifier implements Observer {
 
+    // @Override
+    // public void update(String sender, String message, boolean isUrgent) {
+    // String priority = isUrgent ? "🔴 URGENT" : "🟡 NORMAL";
+    // System.out.println("🔔 POPUP: New email from " + sender);
+    // System.out.println(" Message: " + message.substring(0, Math.min(30,
+    // message.length())) + "...");
+    // }
+
     @Override
-    public void update(String sender, String message, boolean isUrgent) {
-        String priority = isUrgent ? "🔴 URGENT" : "🟡 NORMAL";
-        System.out.println("🔔 POPUP: New email from " + sender);
+    public void update(Email email) {
+        String message = email.getMessage();
+        System.out.println("🔔 POPUP: New email from " + email.getSender());
         System.out.println("   Message: " + message.substring(0, Math.min(30, message.length())) + "...");
     }
 
