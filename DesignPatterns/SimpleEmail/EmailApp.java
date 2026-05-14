@@ -23,6 +23,10 @@ public class EmailApp {
         emailSystem.receiveEmail("boss@company.com", "Meeting at 3 PM today", true);
         emailSystem.receiveEmail("friend@gmail.com", "Want to grab lunch?", false);
 
+        emailSystem.removeObserver(popup);
+        System.out.println("\nObservers after unsubscribe: " + emailSystem.getObserverCount());
+        emailSystem.receiveEmail("news@daily.com", "Top stories for your morning brief");
+
         System.out.println("\n=== Results ===");
         System.out.println("Total unread: " + counter.getCount());
         System.out.println("Urgent unread: " + counter.getUrgentCount());

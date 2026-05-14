@@ -18,6 +18,12 @@ public class InboxCounter implements Observer {
     }
 
     @Override
+    public void update(Email email) {
+        count++;
+        System.out.println("📬 Inbox: " + count + " unread emails after message from " + email.getSender());
+    }
+
+    @Override
     public String getName() {
         return "Inbox Counter";
     }
