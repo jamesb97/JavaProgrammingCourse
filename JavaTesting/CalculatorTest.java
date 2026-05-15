@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.*;
 
+import java.beans.Transient;
+
 public class CalculatorTest {
 
     private Calculator calculator;
@@ -105,5 +107,12 @@ public class CalculatorTest {
         double result = calculator.sqrt(100);
         assertThat(result).isEqualTo(10.0);
         System.out.println("✅ √100 = " + result);
+    }
+
+    @Test
+    void testFactorial() {
+        int result = calculator.factorial(5);
+        assertThat(result).isEqualTo(120);
+        System.out.println("✅ 5! = " + result);
     }
 }
