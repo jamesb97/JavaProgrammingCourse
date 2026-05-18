@@ -80,4 +80,17 @@ public class OrderServiceTest {
         verify(paymentGateway, never()).refundPayment(anyString(), anyDouble());
         verify(emailService, never()).sendEmail(anyString(), anyString());
     }
+
+    @Test
+    void placeOrder_ShouldReturnTrue_WhenOrderIsPlaced() {
+        // ARRANGE
+        String item = "Laptop";
+        int quantity = 2;
+
+        // ACT
+        boolean result = orderService.placeOrder(item, quantity);
+
+        // ASSERT
+        assertTrue(result, "placeOrder() should return true when order is placed");
+    }
 }

@@ -12,6 +12,12 @@ public class OrderService {
     private PaymentGateway paymentGateway;
     private EmailService emailService;
 
+    // Simulate placiing an order
+    public boolean placeOrder(String item, int quantity) {
+        System.out.println("Placing order: " + quantity + " x " + item);
+        return true; // Assume order is always successful for this example
+    }
+
     public String cancelOrder(String orderId, String customerEmail, double amount) {
         // Validate order ID
         if (orderId == null || orderId.trim().isEmpty()) {
@@ -42,10 +48,3 @@ public class OrderService {
         }
     }
 }
-// public class OrderService {
-// public boolean placeOrder(String item, int quantity) {
-// Simulate placing an order
-// System.out.println("Placing order: " + quantity + " x " + item);
-// return true; // Assume order is always successful for this example
-// }
-// }
