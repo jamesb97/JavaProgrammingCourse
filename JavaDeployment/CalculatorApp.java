@@ -31,14 +31,21 @@ public class CalculatorApp {
 
         while (running) {
             if (config.getBooleanProperty("display.operations", true)) {
-                System.out.println("Operations: +, -, *, /, quit");
+                System.out.println("Operations: +, -, *, /, history, quit");
             }
 
-            System.out.print("Enter first number: ");
+            System.out.print("Enter first number: (or 'history' to view calculation history, 'quit' to exit) ");
             if (!scanner.hasNextDouble()) {
                 String input = scanner.next();
                 if ("quit".equalsIgnoreCase(input)) {
                     running = false;
+                    continue;
+                }
+                if ("history".equalsIgnoreCase(input)) {
+                    System.out.println("=== Calculation History ===");
+                    for (int i = 0; i < calculator.getHistory().size(); i++) {
+                        System.out.println((i + 1) + ". " + calculator.getHistory().get(i));
+                    }
                     continue;
                 }
                 System.out.println("Invalid number. Try again.");
