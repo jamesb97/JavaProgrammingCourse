@@ -1,4 +1,4 @@
-package com.example.inventory;
+package inventory;
 
 /**
  * Product class representing items in the inventory.
